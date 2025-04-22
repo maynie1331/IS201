@@ -1,0 +1,62 @@
+.common{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: black;
+    
+
+}
+.header{
+    font-size: 48px;
+    color: white;
+    background-image: url('../images/climbingWall.jpeg');
+    background-size: cover;
+    height: 300px;
+    text-align: center;
+
+}
+.exitLink{
+    background-color: rgba(red, green, blue, 1);
+    position: fixed;
+    right: 5px;
+    bottom: 5px;
+    width: 150px;
+    text-align: justify;
+    float: right;
+    font-size: 18px;
+    
+}
+.toTop{
+    background-color: rgba(red, green, blue, 1);
+    position: fixed;
+    left: 5px;
+    bottom: 5px;
+    width: 150px;
+    text-align: justify;
+    float: left;
+    font-size: 18px;
+    
+}
+.mainBody{
+    text-align: center;
+    margin-left: 300px;
+    margin-right: 300px;
+
+}
+
+.majorItem{
+    font-size: 36px;
+    font-weight: bold;
+    text-align: justify;
+
+}
+.minorItem{
+    text-align: justify;
+    font-size: 24px;
+
+}
+a{
+    color: blue;
+}
+a:visited{
+    color: maroon;
+}

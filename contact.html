@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🧠 Totally Fair & Balanced Hangman ⚖️</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+      background-color: #f7f7f7;
+    }
+    #word {
+      font-size: 2.5em;
+      letter-spacing: 0.3em;
+      margin-bottom: 1em;
+    }
+    #guessed {
+      margin-top: 1em;
+      font-size: 1.2em;
+    }
+    #guesses {
+      margin-top: 0.5em;
+      color: crimson;
+      font-weight: bold;
+    }
+    input {
+      font-size: 1.2em;
+      text-transform: uppercase;
+    }
+    button {
+      font-size: 1em;
+      margin-left: 0.5em;
+      padding: 0.3em 0.7em;
+    }
+    #status {
+      margin-top: 1.5em;
+      font-weight: bold;
+      font-size: 1.3em;
+    }
+    #playAgain {
+      display: none;
+      margin-top: 1em;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+    <a href="index.html" style="
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        text-decoration: none;
+        background-color: #eee;
+        padding: 0.5em 1em;
+        border-radius: 10px;
+        font-weight: bold;
+        color: #333;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+        🏠 Home
+    </a>
+  <h1>🧠 Totally Fair & Balanced Hangman ⚖️</h1>
+  <div id="word">_ _ _ _ _</div>
+  <input id="letter" maxlength="1" autofocus />
+  <button onclick="guessLetter()">Guess</button>
+  <div id="guessed">Guessed letters: <span id="guessedLetters">None</span></div>
+  <div id="guesses">Wrong guesses: 0</div>
+  <div id="status"></div>
+  <button id="playAgain" onclick="startGame()">🔁 Play Again</button>
+
+  <script>
+    const allWords = ["crane", "spear", "flint", "ghost", "brink", "zebra", "whelp", "vigor", "trick","bugle","rythm"];
+    let guessedLetters = new Set();
+    let wrongGuesses = 0;
+    const maxWrong = 6;
+    let currentWord = "";
+    let displayWord = [];
+
+    function startGame() {
+      guessedLetters = new Set();
+      wrongGuesses = 0;
+      currentWord = allWords[Math.floor(Math.random() * allWords.length)];
+      displayWord = Array(currentWord.length).fill("_");
+
+      document.getElementById("word").textContent = displayWord.join(" ");
+      document.getElementById("guesses").textContent = "Wrong guesses: 0";
+      document.getElementById("guessedLetters").textContent = "None";
+      document.getElementById("status").textContent = "";
+      document.getElementById("letter").disabled = false;
+      document.querySelector("button").disabled = false;
+      document.getElementById("playAgain").style.display = "none";
+      document.getElementById("letter").focus();
+    }
+
+    function guessLetter() {
+      const input = document.getElementById("letter");
+      const letter = input.value.toLowerCase();
+      input.value = "";
+
+      if (!letter.match(/[a-z]/) || guessedLetters.has(letter)) return;
+
+      guessedLetters.add(letter);
+
+      const incorrectLetters = [...guessedLetters].filter(l => !currentWord.includes(l));
+
+      let possibleWords = allWords.filter(word => {
+        if (word.length !== displayWord.length) return false;
+        for (let wrongLetter of incorrectLetters) {
+          if (word.includes(wrongLetter)) return false;
+        }
+        for (let i = 0; i < word.length; i++) {
+          if (displayWord[i] !== "_" && word[i] !== displayWord[i]) return false;
+        }
+        return true;
+      });
+
+      if (possibleWords.length > 0) {
+        currentWord = possibleWords[Math.floor(Math.random() * possibleWords.length)];
+      }
+
+      const prevDisplay = displayWord.join("");
+      for (let i = 0; i < currentWord.length; i++) {
+        if (guessedLetters.has(currentWord[i])) {
+          displayWord[i] = currentWord[i];
+        }
+      }
+
+      const newDisplay = displayWord.join("");
+      if (newDisplay === prevDisplay) {
+        wrongGuesses++;
+      }
+
+      document.getElementById("word").textContent = displayWord.join(" ");
+      document.getElementById("guesses").textContent = `Wrong guesses: ${wrongGuesses}`;
+      document.getElementById("guessedLetters").textContent = [...guessedLetters].join(", ").toUpperCase();
+
+      if (!displayWord.includes("_")) {
+        document.getElementById("status").innerHTML = `<span style="color:green;">🎉 Congratulations! You guessed it!</span>`;
+        endGame();
+        return;
+      }
+
+      if (wrongGuesses >= maxWrong) {
+        document.getElementById("status").innerHTML = `<span style="color:red;">😵 Too bad! The word was "<strong>${currentWord.toUpperCase()}</strong>".</span>`;
+        endGame();
+        return;
+      }
+    }
+
+    function endGame() {
+      document.querySelector("button").disabled = true;
+      document.getElementById("letter").disabled = true;
+      document.getElementById("playAgain").style.display = "inline-block";
+    }
+
+    // Start the game when page loads
+    startGame();
+  </script>
+</body>
+</html>
